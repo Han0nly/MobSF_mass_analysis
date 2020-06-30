@@ -32,7 +32,7 @@ def is_server_up(url):
     return False
 
 
-def start_scan(directory, server_url, apikey, rescan='0'):
+def start_scan(path, server_url, apikey, rescan='0'):
     print('\nLooking for Android/iOS/'
           'Windows binaries or source code in : ' + directory)
     logger.info('Uploading to MobSF Server')
@@ -43,8 +43,8 @@ def start_scan(directory, server_url, apikey, rescan='0'):
         '.appx': 'application/octet-stream',
         '.zip': 'application/zip',
     }
-    for filename in os.listdir(directory):
-        fpath = os.path.join(directory, filename)
+    for filename in os.listdir(path):
+        fpath = os.path.join(path, filename)
         _, ext = os.path.splitext(fpath)
         if ext in mimes:
             files = {'file': (filename, open(fpath, 'rb'),
@@ -79,7 +79,7 @@ def start_scan(directory, server_url, apikey, rescan='0'):
                 collection.insert_one(upl_withoutdot)
                 limit = limit + 1
                 count = count + 1
-                srcfile = os.path.join(directory, upl["file_name"])
+                srcfile = os.path.join(path, upl["file_name"])
                 if not os.path.isfile(srcfile):
                     logger.info("%s not exist!" % (srcfile))
                 else:
@@ -89,7 +89,7 @@ def start_scan(directory, server_url, apikey, rescan='0'):
                     logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
             except pymongo.errors.DuplicateKeyError:
                 logger.info(("%s Already Exist!", upl['file_name']))
-                srcfile = os.path.join(directory, upl["file_name"])
+                srcfile = os.path.join(path, upl["file_name"])
                 if not os.path.isfile(srcfile):
                     logger.info("%s not exist!" % (srcfile))
                 else:
@@ -99,7 +99,7 @@ def start_scan(directory, server_url, apikey, rescan='0'):
                     logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
             except pymongo.errors.DocumentTooLarge:
                 big_item.append(upl_withoutdot)
-                srcfile = os.path.join(directory, upl["file_name"])
+                srcfile = os.path.join(path, upl["file_name"])
                 if not os.path.isfile(srcfile):
                     logger.info("%s not exist!" % (srcfile))
                 else:
@@ -111,7 +111,7 @@ def start_scan(directory, server_url, apikey, rescan='0'):
                 print("TypeError! response can not be jsonialized")
         else:
             logger.error('Statuscode %s Performing Static Analysis on %s', (response.status_code, upl['file_name']))
-            srcfile = os.path.join(directory, upl["file_name"])
+            srcfile = os.path.join(path, upl["file_name"])
             if not os.path.isfile(srcfile):
                 logger.info("%s not exist!" % (srcfile))
             else:
