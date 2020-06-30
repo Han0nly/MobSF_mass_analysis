@@ -88,14 +88,13 @@ def start_scan(directory, server_url, apikey, rescan='0'):
                     shutil.move(srcfile, os.path.join(finishdir, upl["file_name"]))
                     logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
             except pymongo.errors.DuplicateKeyError:
-                print("Already Exist!")
+                logger.info(("%s Already Exist!", upl['file_name']))
             except pymongo.errors.DocumentTooLarge:
                 big_item.append(upl_withoutdot)
             except TypeError:
                 print("TypeError! response can not be jsonialized")
         else:
-            logger.error('Performing Static Analysis: %s', upl['file_name'])
-
+            logger.error('Statuscode %s Performing Static Analysis on %s', (response.status_code, upl['file_name']))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
