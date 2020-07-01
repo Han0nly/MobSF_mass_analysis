@@ -34,7 +34,7 @@ def is_server_up(url):
 
 def start_scan(path, server_url, apikey, rescan='0'):
     print('\nLooking for Android/iOS/'
-          'Windows binaries or source code in : ' + directory)
+          'Windows binaries or source code in : ' + path)
     logger.info('Uploading to MobSF Server')
     uploaded = []
     mimes = {
@@ -86,7 +86,7 @@ def start_scan(path, server_url, apikey, rescan='0'):
                     if not os.path.exists(finishdir):
                         os.makedirs(finishdir)
                     shutil.move(srcfile, os.path.join(finishdir, upl["file_name"]))
-                    logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
+                    logger.info("move %s -> %s", srcfile, os.path.join(finishdir, upl["file_name"]))
             except pymongo.errors.DuplicateKeyError:
                 logger.info(("%s Already Exist!", upl['file_name']))
                 srcfile = os.path.join(path, upl["file_name"])
@@ -96,7 +96,7 @@ def start_scan(path, server_url, apikey, rescan='0'):
                     if not os.path.exists(finishdir):
                         os.makedirs(finishdir)
                     shutil.move(srcfile, os.path.join(finishdir, upl["file_name"]))
-                    logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
+                    logger.info("move %s -> %s", srcfile, os.path.join(finishdir, upl["file_name"]))
             except pymongo.errors.DocumentTooLarge:
                 big_item.append(upl_withoutdot)
                 srcfile = os.path.join(path, upl["file_name"])
@@ -106,11 +106,11 @@ def start_scan(path, server_url, apikey, rescan='0'):
                     if not os.path.exists(finishdir):
                         os.makedirs(finishdir)
                     shutil.move(srcfile, os.path.join(finishdir, upl["file_name"]))
-                    logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
+                    logger.info("move %s -> %s", srcfile, os.path.join(finishdir, upl["file_name"]))
             except TypeError:
                 print("TypeError! response can not be jsonialized")
         else:
-            logger.error('Statuscode %s Performing Static Analysis on %s', (response.status_code, upl['file_name']))
+            logger.error('Statuscode %s Performing Static Analysis on %s', response.status_code, upl['file_name'])
             srcfile = os.path.join(path, upl["file_name"])
             if not os.path.isfile(srcfile):
                 logger.info("%s not exist!" % (srcfile))
@@ -118,7 +118,7 @@ def start_scan(path, server_url, apikey, rescan='0'):
                 if not os.path.exists(finishdir):
                     os.makedirs(finishdir)
                 shutil.move(srcfile, os.path.join(finishdir, upl["file_name"]))
-                logger.info("move %s -> %s", (srcfile, os.path.join(finishdir, upl["file_name"])))
+                logger.info("move %s -> %s", srcfile, os.path.join(finishdir, upl["file_name"]))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
